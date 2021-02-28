@@ -3,13 +3,13 @@ import React, { useState, useEffect } from "react";
 import MenuItem from "../menu-item/menu-item.component";
 
 import "./directory.styles.scss";
-import directoryData from "./directory.data";
+import sectionsData from "./sections.data";
 
 const Directory = () => {
   const [sections, setSections] = useState([]);
 
   useEffect(() => {
-    setSections(directoryData);
+    setSections(sectionsData);
     return () => {
       setSections([]);
     };
