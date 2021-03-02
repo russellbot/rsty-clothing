@@ -7,16 +7,27 @@ import HomePage from "./pages/homepage/homepage.component.jsx";
 import ShopPage from './pages/shop/shop.component.jsx';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component.jsx';
 import Header from './components/header/header.component.jsx';
-import { auth } from './firebase/firebase.utils';
+import { auth, createUserProfileDocument } from './firebase/firebase.utils';
 
 const App = () => {
   const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
     //Firebase authentication
-    auth.onAuthStateChanged(user => {
-      setCurrentUser(user);
-    })
+    auth.onAuthStateChanged(async userAuth => {
+      if (userAuth) {
+        const userRef = await createUserProfileDocument(userAuth);
+
+        userRef.onSnapshot(snapShot => {
+          setCurrentUser({
+            id: snapShot.id,
+            ...snapShot.data()
+          });
+        });        
+      } else {
+        setCurrentUser(userAuth);
+      }
+    });
 
     //unsubscribe when unmounting
     return () => {
@@ -26,7 +37,7 @@ const App = () => {
     }
   }, [])
 
-  console.log(currentUser)
+  // console.log(currentUser)
 
   return (
     <div>
