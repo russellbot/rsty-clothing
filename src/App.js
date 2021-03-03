@@ -1,32 +1,32 @@
-import React, {useEffect} from "react";
-import { Switch, Route } from "react-router-dom";
-import { connect } from 'react-redux';
+import React, { useEffect } from "react";
+import { Switch, Route, Redirect } from "react-router-dom";
+import { connect } from "react-redux";
 
 import "./App.css";
 
 import HomePage from "./pages/homepage/homepage.component.jsx";
-import ShopPage from './pages/shop/shop.component.jsx';
-import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component.jsx';
-import Header from './components/header/header.component.jsx';
-import { auth, createUserProfileDocument } from './firebase/firebase.utils';
-import { setCurrentUser } from './redux/user/user.actions';
+import ShopPage from "./pages/shop/shop.component.jsx";
+import SignInAndSignUpPage from "./pages/sign-in-and-sign-up/sign-in-and-sign-up.component.jsx";
+import Header from "./components/header/header.component.jsx";
+import { auth, createUserProfileDocument } from "./firebase/firebase.utils";
+import { setCurrentUser } from "./redux/user/user.actions";
 
 const App = (props) => {
-  // const [currentUser, setCurrentUser] = useState(null);  
+  // const [currentUser, setCurrentUser] = useState(null);
 
-  useEffect(() => {    
+  useEffect(() => {
     const { setCurrentUser } = props;
     //Firebase authentication
-    auth.onAuthStateChanged(async userAuth => {
+    auth.onAuthStateChanged(async (userAuth) => {
       if (userAuth) {
         const userRef = await createUserProfileDocument(userAuth);
 
-        userRef.onSnapshot(snapShot => {
+        userRef.onSnapshot((snapShot) => {
           setCurrentUser({
             id: snapShot.id,
-            ...snapShot.data()
+            ...snapShot.data(),
           });
-        });        
+        });
       } else {
         setCurrentUser(userAuth);
       }
@@ -34,11 +34,12 @@ const App = (props) => {
 
     //unsubscribe when unmounting
     return () => {
-      auth.onAuthStateChanged(user => {
+      auth.onAuthStateChanged((user) => {
         setCurrentUser(null);
-      })
-    }
-  }, [props])
+      });
+    };
+    // eslint-disable-next-line
+  }, []);
 
   // console.log(currentUser)
 
@@ -48,14 +49,18 @@ const App = (props) => {
       <Switch>
         <Route exact path="/" component={HomePage} />
         <Route exact path="/shop" component={ShopPage} />
-        <Route exact path="/signin" component={SignInAndSignUpPage} />
+        <Route exact path="/signin" render={() => props.currentUser ? (<Redirect to='/' />) : (<SignInAndSignUpPage />)} />
       </Switch>
     </div>
   );
-}
+};
 
-const mapDispatchToProps = dispatch => ({
-  setCurrentUser: user => dispatch(setCurrentUser(user))
+const mapStateToProps = ({ user }) => ({
+  currentUser: user.currentUser,
 });
 
-export default connect(null, mapDispatchToProps)(App);
+const mapDispatchToProps = (dispatch) => ({
+  setCurrentUser: (user) => dispatch(setCurrentUser(user)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

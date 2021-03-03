@@ -16,7 +16,7 @@ const ShopPage = () => {
 
 
     return (         
-        <div classname='shop-page'>
+        <div className='shop-page'>
             {
                 collections.map(({ id, ...otherCollectionsProps }) => (
                     <CollectionPreview key={id} {...otherCollectionsProps} />
