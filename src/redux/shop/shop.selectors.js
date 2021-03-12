@@ -9,13 +9,22 @@ export const selectCollections = createSelector(
 );
 
 export const selectCollectionsForPreview = createSelector(
-    [selectCollections],
-    (collections) => collections ? Object.values(collections) : []
+  [selectCollections],
+  (collections) => (collections ? Object.values(collections) : [])
 );
 
 export const selectCollection = memoize((collectionUrlParam) =>
-  createSelector(
-    [selectCollections], 
-    (collections) => collections ? collections[collectionUrlParam] : null
+  createSelector([selectCollections], (collections) =>
+    collections ? collections[collectionUrlParam] : null
   )
+);
+
+export const selectIsCollectionFetching = createSelector(
+  [selectShop],
+  (shop) => shop.isFetching
+);
+
+export const selectisCollectionsLoaded = createSelector(
+  [selectShop],
+  (shop) => !!shop.collections
 );
