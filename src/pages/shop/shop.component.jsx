@@ -26,13 +26,26 @@ class ShopPage extends React.Component {
     const { updateCollections } = this.props;
     const collectionRef = firestore.collection("collections");
 
-    this.unsubscribeFromSnapshot = collectionRef.onSnapshot(
-      async (snapshot) => {
-        const collectionsMap = convertCollectionsSnapshotToMap(snapshot);
-        updateCollections(collectionsMap);
-        this.setState({ loading: false });
-      }
-    );
+    // Access Firestore with fetch
+    // fetch('https://firestore.googleapis.com/v1/projects/rsty-clothing/databases/(default)/documents/collections')
+    //   .then(response => response.json())
+    //   .then(collections => console.log(collections));
+
+    // Access Firestore with promise
+    collectionRef.get().then((snapshot) => {
+      const collectionsMap = convertCollectionsSnapshotToMap(snapshot);
+      updateCollections(collectionsMap);
+      this.setState({ loading: false });
+    })
+
+    // Acdess Firestore with async await
+    // this.unsubscribeFromSnapshot = collectionRef.onSnapshot(
+    //   async (snapshot) => {
+    //     const collectionsMap = convertCollectionsSnapshotToMap(snapshot);
+    //     updateCollections(collectionsMap);
+    //     this.setState({ loading: false });
+    //   }
+    // );
   }
 
   render() {
