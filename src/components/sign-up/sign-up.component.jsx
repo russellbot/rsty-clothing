@@ -1,16 +1,14 @@
 import React, { useState } from "react";
+import { connect } from "react-redux";
 
 import FormInput from "../form-input/form-input.component";
 import CustomButton from "../custom-button/custom-button.component";
 
-import {
-  auth,
-  createUserProfileDocument,
-} from "../../firebase/firebase.utils.js";
+import { signUpStart } from "../../redux/user/user.actions";
 
 import "./sign-up.styles.scss";
 
-const SignUp = () => {
+const SignUp = ({ signUpStart }) => {
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -24,22 +22,7 @@ const SignUp = () => {
       return;
     }
 
-    try {
-      //create user in Firebase
-      const { user } = await auth.createUserWithEmailAndPassword(
-        email,
-        password
-      );
-
-      await createUserProfileDocument(user, { displayName });
-      //reset the state back to the initial state
-      setDisplayName("");
-      setEmail("");
-      setPassword("");
-      setConfirmPassword("");
-    } catch (error) {
-      console.error(error);
-    }
+    signUpStart({ displayName, email, password });
   };
 
   const handleChange = (event) => {
@@ -104,4 +87,8 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+const mapDispatchToProps = (dispatch) => ({
+  signUpStart: (userCredentials) => dispatch(signUpStart(userCredentials)),
+});
+
+export default connect(null, mapDispatchToProps)(SignUp);
