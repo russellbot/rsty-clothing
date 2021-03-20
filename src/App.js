@@ -18,13 +18,7 @@ const App = ({ checkUserSession, currentUser }) => {
   
   useEffect(() => {
     checkUserSession();
-
-    //unsubscribe when unmounting
-    // return () => {
-      
-    // };
-    // eslint-disable-next-line
-  }, []);
+  }, [checkUserSession]);
 
   return (
     <div>
