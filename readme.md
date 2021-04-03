@@ -11,7 +11,7 @@ The backed uses a simple server built with Node and Express to access the Stripe
 
 ## Installation
 *********
-To contribute to this work simply fork and clone the repository and run yarn install.  Navigate to the client folder and run yarn install for the frontend.  To start both the server and the front end, navigate to the base folder and run yarn start dev.
+To contribute to this work simply fork and clone the repository and run yarn install.  Navigate to the client folder and run yarn install for the frontend.  To start both the server and the front end, navigate to the base folder and run yarn run dev.
 
 ## Sample
 ******
